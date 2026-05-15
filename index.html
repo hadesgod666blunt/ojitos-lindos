@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Niña Linda ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+ 
+  :root {
+    --gold: #f0c56e;
+    --rose: #e8a0bf;
+    --lavender: #c9b8e8;
+    --cream: #fdf6e9;
+    --deep: #0a0614;
+    --deep2: #110a22;
+    --star: #fff8e7;
+  }
+ 
+  body {
+    background: var(--deep);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+ 
+  #custom-cursor {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 10px var(--gold), 0 0 20px var(--rose);
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s;
+  }
+ 
+  /* ===== PANTALLA DE INICIO ===== */
+  #intro {
+    position: fixed;
+    inset: 0;
+    background: var(--deep);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: opacity 1.5s ease, transform 1.5s ease;
+  }
+ 
+  #intro.hide {
+    opacity: 0;
+    transform: scale(1.05);
+    pointer-events: none;
+  }
+ 
+  .intro-stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+ 
+  .intro-star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+ 
+  @keyframes twinkle {
+    from { opacity: 0.1; transform: scale(0.8); }
+    to   { opacity: 1;   transform: scale(1.2); }
+  }
+ 
+  .intro-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    color: var(--cream);
+    text-align: center;
+    line-height: 1.15;
+    letter-spacing: 0.04em;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 0 40px rgba(240,197,110,0.4);
+    animation: fadeUp 1.4s ease both;
+  }
+ 
+  .intro-title em {
+    color: var(--gold);
+    font-style: italic;
+    display: block;
+  }
+ 
+  .intro-sub {
+    font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+    color: var(--rose);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 1.4s 0.3s ease both;
+  }
+ 
+  #btn-entrar {
+    margin-top: 3rem;
+    padding: 1rem 3rem;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    transition: background 0.4s, color 0.4s, box-shadow 0.4s;
+    animation: fadeUp 1.4s 0.6s ease both;
+  }
+ 
+  #btn-entrar:hover {
+    background: var(--gold);
+    color: var(--deep);
+    box-shadow: 0 0 30px rgba(240,197,110,0.5);
+  }
+ 
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+ 
+  /* ===== FONDO ESTRELLADO ===== */
+  #universe {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+ 
+  /* ===== CONTENIDO PRINCIPAL ===== */
+  #main {
+    opacity: 0;
+    transition: opacity 2s ease;
+    min-height: 100vh;
+  }
+ 
+  #main.show { opacity: 1; }
+ 
+  /* ===== AUDIO ===== */
+  #audio-btn {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 50;
+    background: rgba(10,6,20,0.7);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: box-shadow 0.3s;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+ 
+  #audio-btn.visible { display: flex; }
+  #audio-btn:hover { box-shadow: 0 0 16px var(--gold); }
+ 
+  /* ===== SECCIÓN HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+ 
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    color: var(--cream);
+    line-height: 1.2;
+    text-shadow: 0 0 60px rgba(240,197,110,0.3);
+    animation: shimmer 4s ease-in-out infinite alternate;
+  }
+ 
+  @keyframes shimmer {
+    from { text-shadow: 0 0 30px rgba(240,197,110,0.2); }
+    to   { text-shadow: 0 0 80px rgba(240,197,110,0.5), 0 0 120px rgba(232,160,191,0.3); }
+  }
+ 
+  .hero-title em { color: var(--gold); font-style: italic; }
+ 
+  .hero-messages {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+ 
+  .hero-msg {
+    font-size: clamp(1rem, 2.5vw, 1.35rem);
+    color: var(--rose);
+    font-style: italic;
+    opacity: 0;
+    animation: fadeSlide 0.8s ease forwards;
+  }
+ 
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+ 
+  .scroll-hint {
+    margin-top: 4rem;
+    color: var(--lavender);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: bounce 2s ease-in-out infinite;
+  }
+ 
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); opacity: 0.5; }
+    50%      { transform: translateY(8px); opacity: 1; }
+  }
+ 
+  /* ===== CONSTELACIÓN INTERACTIVA ===== */
+  #constellation-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: 1;
+  }
+ 
+  .section-label {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    color: var(--cream);
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+ 
+  .section-sub {
+    color: var(--rose);
+    font-style: italic;
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+ 
+  #constellation-canvas {
+    width: 100%;
+    max-width: 700px;
+    aspect-ratio: 1;
+    position: relative;
+    cursor: pointer;
+  }
+ 
+  #constellation-canvas canvas {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(201,184,232,0.1);
+  }
+ 
+  .star-popup {
+    position: fixed;
+    background: rgba(10,6,20,0.92);
+    border: 1px solid var(--gold);
+    color: var(--cream);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-style: italic;
+    pointer-events: none;
+    z-index: 200;
+    backdrop-filter: blur(10px);
+    max-width: 220px;
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 0 30px rgba(240,197,110,0.3);
+  }
+ 
+  .star-popup.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+ 
+  /* ===== GALERÍA DE FOTOS ===== */
+  #gallery-section {
+    padding: 5rem 2rem;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+ 
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 3rem auto 0;
+  }
+ 
+  .photo-frame {
+    position: relative;
+    aspect-ratio: 3/4;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s ease;
+  }
+ 
+  .photo-frame:hover { transform: scale(1.03) rotate(0.5deg); }
+ 
+  .photo-frame::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--gold), var(--rose), var(--lavender), var(--gold));
+    background-size: 300% 300%;
+    animation: borderFlow 4s ease infinite;
+    z-index: -1;
+  }
+ 
+  @keyframes borderFlow {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+ 
+  .photo-frame img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 3px;
+  }
+ 
+  .photo-frame .photo-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(10,6,20,0.85));
+    color: var(--cream);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    padding: 1.5rem 1rem 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+ 
+  .photo-frame:hover .photo-label { opacity: 1; }
+ 
+  .photo-placeholder {
+    width: 100%; height: 100%;
+    background: var(--deep2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--lavender);
+    font-size: 2rem;
+    gap: 0.5rem;
+    border-radius: 3px;
+  }
+ 
+  .photo-placeholder span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    color: var(--rose);
+    letter-spacing: 0.1em;
+  }
+ 
+  /* ===== MENSAJE FINAL ===== */
+  #final-section {
+    padding: 6rem 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+ 
+  .final-msg {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 4vw, 2.5rem);
+    color: var(--gold);
+    font-style: italic;
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto;
+    text-shadow: 0 0 40px rgba(240,197,110,0.3);
+  }
+ 
+  .hearts-rain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 300;
+    overflow: hidden;
+  }
+ 
+  .heart-particle {
+    position: absolute;
+    font-size: 1rem;
+    animation: fallHeart var(--fall-d) ease-in forwards;
+    opacity: 0.8;
+  }
+ 
+  @keyframes fallHeart {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 0.8; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+ 
+  /* ===== SHOOTING STARS ===== */
+  .shooting-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: shoot var(--shoot-d) linear forwards;
+  }
+ 
+  @keyframes shoot {
+    0%   { transform: translate(0,0) scaleX(1); opacity: 1; }
+    100% { transform: translate(300px, 150px) scaleX(60); opacity: 0; }
+  }
+ 
+  /* lightbox */
+  #lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,3,12,0.95);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+ 
+  #lightbox.open { display: flex; }
+ 
+  #lightbox img {
+    max-width: 90vw;
+    max-height: 85vh;
+    border-radius: 4px;
+    box-shadow: 0 0 60px rgba(240,197,110,0.3);
+    object-fit: contain;
+  }
+ 
+  #lb-close {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    color: var(--gold);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+</style>
+</head>
+<body>
+ 
+<div id="custom-cursor"></div>
+<div class="hearts-rain" id="hearts-rain"></div>
+ 
+<!-- CURSOR -->
+<script>
+  const cur = document.getElementById('custom-cursor');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+</script>
+ 
+<!-- AUDIO -->
+<audio id="bg-audio" loop>
+  <!-- Reemplaza el src con el archivo de "Arrullo de estrellas" de Zoé -->
+  <!-- Ejemplo: <source src="arrullo-de-estrellas.mp3" type="audio/mpeg"> -->
+  <source src="audio.mp3" type="audio/mpeg">
+</audio>
+ 
+<button id="audio-btn" title="Música">🎵</button>
+ 
+<!-- PANTALLA INTRO -->
+<div id="intro">
+  <div class="intro-stars" id="intro-stars"></div>
+ 
+  <h1 class="intro-title">
+    Mi niña<br>
+    <em>linda</em>
+  </h1>
+  <p class="intro-sub">✦ una constelación para ti ✦</p>
+  <button id="btn-entrar">Entrar ✦</button>
+</div>
+ 
+<!-- UNIVERSO -->
+<canvas id="universe" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+ 
+<!-- AUDIO BTN -->
+ 
+<!-- MAIN -->
+<div id="main">
+ 
+  <!-- HERO -->
+  <section class="hero">
+    <h2 class="hero-title">
+      Ojos tan lindos<br>
+      que <em>iluminan</em> la noche
+    </h2>
+    <div class="hero-messages">
+      <p class="hero-msg" style="animation-delay:0.2s">✦ Eres más bonita que todas las estrellas juntas ✦</p>
+      <p class="hero-msg" style="animation-delay:0.6s">✦ Tu sonrisa es mi galaxia favorita ✦</p>
+      <p class="hero-msg" style="animation-delay:1s">✦ Le das luz a cualquier universo que tocas ✦</p>
+    </div>
+    <p class="scroll-hint">↓ sigue explorando ↓</p>
+  </section>
+ 
+  <!-- CONSTELACIÓN -->
+  <section id="constellation-section">
+    <h2 class="section-label">Tu constelación</h2>
+    <p class="section-sub">Toca cada estrella y descubre un mensaje 🌙</p>
+    <div id="constellation-canvas">
+      <canvas id="const-canvas"></canvas>
+    </div>
+  </section>
+ 
+  <!-- GALERÍA -->
+  <section id="gallery-section">
+    <h2 class="section-label">Mis fotos favoritas de ti</h2>
+    <p class="section-sub">cada imagen vale mil palabras bonitas</p>
+ 
+    <div class="gallery-grid" id="gallery-grid">
+      <!-- Las fotos se generan con JS — pon tus archivos como foto1.jpg, foto2.jpg, etc. -->
+    </div>
+  </section>
+ 
+  <!-- MENSAJE FINAL -->
+  <section id="final-section">
+    <p class="final-msg">
+      "Donde quiera que estés,<br>
+      hay una estrella que lleva tu nombre<br>
+      y brilla solo para ti."
+    </p>
+    <p style="color:var(--rose);margin-top:2rem;font-style:italic;font-size:1rem;">
+      — con mucho cariño ✦
+    </p>
+  </section>
+ 
+</div><!-- end main -->
+ 
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <span id="lb-close">✕</span>
+  <img id="lb-img" src="" alt="">
+</div>
+ 
+<div class="star-popup" id="star-popup"></div>
+ 
+<script>
+// ============================================================
+//  CONFIGURACIÓN — Cambia aquí tus fotos y mensajes
+// ============================================================
+const FOTOS = [
+  { archivo: 'foto1.JPEG', caption: 'Tan bella que me quedo sin palabras' },
+  { archivo: 'foto2.JPEG', caption: 'Esos ojitos que me encantan' },
+  { archivo: 'foto3.JPEG', caption: 'Tu sonrisa, mi parte favorita' },
+  { archivo: 'foto4.JPEG', caption: 'Eres pura magia' },
+  
+];
+ 
+const STAR_MESSAGES = [
+  '✨ Eres increíblemente bonita',
+  '🌙 Tus ojitos me derritieron el corazón',
+  '💫 Tienes una luz que no se puede ignorar',
+  '🌸 Tu risa es lo más bonito del mundo',
+  '⭐ Eres única, irrepetible y especial',
+  '💛 Le das brillo a cada lugar que pisas',
+  '🌟 Tienes algo mágico que me encanta',
+  '🪐 Si fueras planeta, sería el más hermoso',
+  '🌺 Qué linda eres, de verdad',
+  '💖 Tu existencia me alegra los días',
+  '✦ Tan preciosa que las estrellas te envidian',
+  '🌠 Cada vez que sonríes brilla el universo',
+];
+ 
+// ============================================================
+//  FONDO ESTRELLADO (canvas universo)
+// ============================================================
+function setupUniverse() {
+  const canvas = document.getElementById('universe');
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [];
+ 
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    stars = Array.from({length: 250}, () => ({
+      x: Math.random()*W, y: Math.random()*H,
+      r: Math.random()*1.5 + 0.3,
+      a: Math.random(), da: (Math.random()-0.5)*0.01,
+      color: Math.random() < 0.15 ? '#f0c56e' : Math.random() < 0.15 ? '#e8a0bf' : '#fff8e7'
+    }));
+  }
+ 
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    for (const s of stars) {
+      s.a = Math.max(0.05, Math.min(1, s.a + s.da));
+      if (s.a <= 0.05 || s.a >= 1) s.da *= -1;
+      ctx.globalAlpha = s.a;
+      ctx.fillStyle = s.color;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+ 
+  window.addEventListener('resize', resize);
+  resize(); draw();
+ 
+  // Shooting stars
+  function shootingStar() {
+    const el = document.createElement('div');
+    el.className = 'shooting-star';
+    el.style.cssText = `left:${Math.random()*80}vw;top:${Math.random()*60}vh;--shoot-d:${0.6+Math.random()*0.8}s`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1400);
+    setTimeout(shootingStar, 3000 + Math.random()*5000);
+  }
+  setTimeout(shootingStar, 2000);
+}
+ 
+// ============================================================
+//  INTRO STARS
+// ============================================================
+const introStarsEl = document.getElementById('intro-stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'intro-star';
+  const sz = Math.random()*2.5 + 0.5;
+  s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${1.5+Math.random()*3}s;animation-delay:${Math.random()*3}s`;
+  introStarsEl.appendChild(s);
+}
+ 
+// ============================================================
+//  BOTÓN ENTRAR
+// ============================================================
+document.getElementById('btn-entrar').addEventListener('click', () => {
+  document.getElementById('intro').classList.add('hide');
+  const main = document.getElementById('main');
+  const audioBtn = document.getElementById('audio-btn');
+  setTimeout(() => {
+    main.classList.add('show');
+    audioBtn.classList.add('visible');
+    setupUniverse();
+    setupConstellation();
+    setupGallery();
+  }, 800);
+ 
+  // Intentar reproducir audio
+  const audio = document.getElementById('bg-audio');
+  audio.volume = 0.5;
+  audio.play().catch(() => {});
+});
+ 
+// ============================================================
+//  AUDIO BOTÓN
+// ============================================================
+let audioPlaying = true;
+document.getElementById('audio-btn').addEventListener('click', () => {
+  const audio = document.getElementById('bg-audio');
+  if (audioPlaying) { audio.pause(); document.getElementById('audio-btn').textContent = '🔇'; }
+  else              { audio.play();  document.getElementById('audio-btn').textContent = '🎵'; }
+  audioPlaying = !audioPlaying;
+});
+ 
+// ============================================================
+//  CONSTELACIÓN
+// ============================================================
+function setupConstellation() {
+  const canvas = document.getElementById('const-canvas');
+  const ctx = canvas.getContext('2d');
+  const SIZE = 600;
+  canvas.width = canvas.height = SIZE;
+ 
+  // Posiciones de estrellas (constelación tipo corazón + niña)
+  const starPositions = [
+    [300, 80],  [200,160],  [140,260],  [160,360],  [230,440],
+    [300,480],  [370,440],  [440,360],  [460,260],  [400,160],
+    [300,260],  [210,300],  [390,300],
+  ];
+ 
+  const lines = [
+    [0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,0],
+    [0,10],[10,11],[10,12]
+  ];
+ 
+  const popup = document.getElementById('star-popup');
+  let hoveredStar = null;
+ 
+  function draw() {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+ 
+    // Fondo nebulosa suave
+    const grad = ctx.createRadialGradient(300,300,30,300,300,280);
+    grad.addColorStop(0, 'rgba(201,184,232,0.06)');
+    grad.addColorStop(1, 'rgba(10,6,20,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(300,300,280,0,Math.PI*2);
+    ctx.fill();
+ 
+    // Líneas de constelación
+    ctx.strokeStyle = 'rgba(240,197,110,0.25)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,6]);
+    for (const [a,b] of lines) {
+      const [x1,y1] = starPositions[a];
+      const [x2,y2] = starPositions[b];
+      ctx.beginPath();
+      ctx.moveTo(x1,y1);
+      ctx.lineTo(x2,y2);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+ 
+    // Estrellas
+    const now = Date.now();
+    for (let i = 0; i < starPositions.length; i++) {
+      const [x,y] = starPositions[i];
+      const pulse = 0.5 + 0.5*Math.sin(now/800 + i*0.7);
+      const isHov = hoveredStar === i;
+      const r = isHov ? 10 : 5 + pulse*2;
+ 
+      // Halo
+      const halo = ctx.createRadialGradient(x,y,0,x,y,r*3.5);
+      halo.addColorStop(0, isHov ? 'rgba(240,197,110,0.55)' : 'rgba(240,197,110,0.25)');
+      halo.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = halo;
+      ctx.beginPath();
+      ctx.arc(x,y,r*3.5,0,Math.PI*2);
+      ctx.fill();
+ 
+      // Estrella
+      ctx.fillStyle = isHov ? '#f0c56e' : '#fff8e7';
+      ctx.beginPath();
+      drawStar(ctx, x, y, 5, r, r*0.4);
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+ 
+  function drawStar(ctx, cx, cy, spikes, outerR, innerR) {
+    let rot = (Math.PI/2)*3;
+    const step = Math.PI/spikes;
+    ctx.moveTo(cx, cy - outerR);
+    for (let i = 0; i < spikes; i++) {
+      ctx.lineTo(cx + Math.cos(rot)*outerR, cy + Math.sin(rot)*outerR);
+      rot += step;
+      ctx.lineTo(cx + Math.cos(rot)*innerR, cy + Math.sin(rot)*innerR);
+      rot += step;
+    }
+    ctx.lineTo(cx, cy - outerR);
+    ctx.closePath();
+  }
+ 
+  // Hover / Click
+  function getStarAt(ex, ey) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = SIZE / rect.width;
+    const scaleY = SIZE / rect.height;
+    const mx = (ex - rect.left)*scaleX;
+    const my = (ey - rect.top)*scaleY;
+    for (let i = 0; i < starPositions.length; i++) {
+      const [x,y] = starPositions[i];
+      if (Math.hypot(mx-x, my-y) < 22) return i;
+    }
+    return null;
+  }
+ 
+  canvas.addEventListener('mousemove', e => {
+    const idx = getStarAt(e.clientX, e.clientY);
+    hoveredStar = idx;
+    canvas.style.cursor = idx !== null ? 'pointer' : 'default';
+    if (idx !== null) {
+      popup.textContent = STAR_MESSAGES[idx % STAR_MESSAGES.length];
+      popup.style.left = (e.clientX + 15) + 'px';
+      popup.style.top  = (e.clientY - 20) + 'px';
+      popup.classList.add('visible');
+    } else {
+      popup.classList.remove('visible');
+    }
+  });
+ 
+  canvas.addEventListener('click', e => {
+    const idx = getStarAt(e.clientX, e.clientY);
+    if (idx !== null) spawnHearts(e.clientX, e.clientY, 8);
+  });
+ 
+  canvas.addEventListener('mouseleave', () => {
+    hoveredStar = null;
+    popup.classList.remove('visible');
+  });
+ 
+  draw();
+}
+ 
+// ============================================================
+//  GALERÍA
+// ============================================================
+function setupGallery() {
+  const grid = document.getElementById('gallery-grid');
+  FOTOS.forEach((foto, i) => {
+    const frame = document.createElement('div');
+    frame.className = 'photo-frame';
+ 
+    const img = document.createElement('img');
+    img.src = foto.archivo;
+    img.alt = foto.caption;
+    img.onerror = () => {
+      // Placeholder si no existe la foto
+      frame.innerHTML = `
+        <div class="photo-placeholder">
+          <span style="font-size:2.5rem">📸</span>
+          <span>foto${i+1}.jpg</span>
+          <span style="font-size:0.7rem;margin-top:4px;color:var(--lavender)">Agrega tu foto aquí</span>
+        </div>
+        <div class="photo-label">${foto.caption}</div>
+      `;
+    };
+ 
+    const label = document.createElement('div');
+    label.className = 'photo-label';
+    label.textContent = foto.caption;
+ 
+    frame.appendChild(img);
+    frame.appendChild(label);
+ 
+    frame.addEventListener('click', () => {
+      if (img.complete && img.naturalWidth > 0) {
+        document.getElementById('lb-img').src = img.src;
+        document.getElementById('lightbox').classList.add('open');
+      }
+    });
+ 
+    grid.appendChild(frame);
+  });
+}
+ 
+document.getElementById('lightbox').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+ 
+// ============================================================
+//  CORAZONES
+// ============================================================
+function spawnHearts(x, y, count) {
+  const rain = document.getElementById('hearts-rain');
+  const emojis = ['💛','✨','🌟','💫','⭐','🌸','💖','✦'];
+  for (let i = 0; i < count; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart-particle';
+    h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    h.style.cssText = `left:${x + (Math.random()-0.5)*80}px;top:${y}px;--fall-d:${1+Math.random()*1.5}s;animation-delay:${Math.random()*0.3}s`;
+    rain.appendChild(h);
+    setTimeout(() => h.remove(), 2500);
+  }
+}
+ 
+// Corazones aleatorios suaves
+setInterval(() => {
+  if (!document.getElementById('main').classList.contains('show')) return;
+  const x = Math.random()*window.innerWidth;
+  spawnHearts(x, -10, 2);
+}, 2500);
+</script>
+</body>
+</html>
